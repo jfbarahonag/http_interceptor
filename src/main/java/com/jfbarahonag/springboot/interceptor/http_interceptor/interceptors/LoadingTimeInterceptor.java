@@ -3,7 +3,7 @@ package com.jfbarahonag.springboot.interceptor.http_interceptor.interceptors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.method.HandlerMethod;
+// import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,9 +17,9 @@ public class LoadingTimeInterceptor implements HandlerInterceptor {
   
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    
-    HandlerMethod controller = ((HandlerMethod) handler);
-    logger.info(controller.getMethod().getName() + " : preHandle() ");
+
+    Long start = System.currentTimeMillis();
+    request.setAttribute("start", start);
     
     return true;
   }
@@ -28,8 +28,10 @@ public class LoadingTimeInterceptor implements HandlerInterceptor {
   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
       ModelAndView modelAndView) throws Exception {
         
-        HandlerMethod controller = ((HandlerMethod) handler);
-        logger.info(controller.getMethod().getName() + " : postHandle() ");
+        Long end = System.currentTimeMillis();
+        Long start = (Long) request.getAttribute("start");
+        Long result = end - start;
+        logger.info("Request duration: {}ms", result);
 
   }
 
